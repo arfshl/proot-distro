@@ -16,6 +16,20 @@ bootstrap_distribution() {
 			--format=directory \
 			"${dist_version}" \
 			"${WORKDIR}/ubuntu-${dist_version}-$(translate_arch "$arch")"
+
+		cat <<- EOF | sudo unshare -mpf bash -e -
+		mount --bind /dev "${WORKDIR}/ubuntu-${dist_version}-$(translate_arch "$arch")/dev"
+		mount --bind /proc "${WORKDIR}/ubuntu-${dist_version}-$(translate_arch "$arch")/proc"
+		mount --bind /sys "${WORKDIR}/ubuntu-${dist_version}-$(translate_arch "$arch")/sys"
+		chroot "${WORKDIR}/ubuntu-${dist_version}-$(translate_arch "$arch")" apt update
+		chroot "${WORKDIR}/ubuntu-${dist_version}-$(translate_arch "$arch")" apt purge -yq --allow-remove-essential coreutils-from-uutils
+		chroot "${WORKDIR}/ubuntu-${dist_version}-$(translate_arch "$arch")" apt purge -yq --allow-remove-essential rust-coreutils
+		chroot "${WORKDIR}/ubuntu-${dist_version}-$(translate_arch "$arch")" apt install -yq coreutils-from-gnu
+		chroot "${WORKDIR}/ubuntu-${dist_version}-$(translate_arch "$arch")" apt install -yq gnu-coreutils
+		chroot "${WORKDIR}/ubuntu-${dist_version}-$(translate_arch "$arch")" apt clean
+		rm -rf "${WORKDIR}/ubuntu-${dist_version}-$(translate_arch "$arch")"/var/lib/apt/lists/*
+		EOF
+
 		archive_rootfs "${ROOTFS_DIR}/ubuntu-${dist_version}-$(translate_arch "$arch")-pd-${CURRENT_VERSION}.tar.xz" \
 			"ubuntu-${dist_version}-$(translate_arch "$arch")"
 	done
