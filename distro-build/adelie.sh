@@ -7,8 +7,7 @@ bootstrap_distribution() {
 	for arch in aarch64 armv7 x86_64; do
 		curl --fail --location \
 			--output "${WORKDIR}/adelie-${dist_version}-${arch}.tar.xz" \
-			"https://adelielinux.nic.cz/adelie/adelie/${dist_version}/iso/adelie-rootfs-mini-${arch}-${dist_version}-20241223.txz"
-			#"https://distfiles.adelielinux.org/adelie/${dist_version}/iso/adelie-rootfs-mini-${arch}-${dist_version}-20241223.txz"
+			"https://adelielinux.nic.cz/adelie/${dist_version}/iso/adelie-rootfs-mini-${arch}-${dist_version}-20241223.txz"
 
 		sudo rm -rf "${WORKDIR}/adelie-$(translate_arch "$arch")"
 		sudo mkdir -m 755 "${WORKDIR}/adelie-$(translate_arch "$arch")"
@@ -20,8 +19,8 @@ bootstrap_distribution() {
 		rm -f "${WORKDIR}/adelie-$(translate_arch "$arch")/etc/resolv.conf"
 		echo "nameserver 1.1.1.1" > "${WORKDIR}/adelie-$(translate_arch "$arch")/etc/resolv.conf"
 		sed -i -E 's/(.*)/#\1/g' "${WORKDIR}/adelie-$(translate_arch "$arch")/etc/apk/repositories"
-		echo "https://adelielinux.nic.cz/adelie/adelie/current/system" >> "${WORKDIR}/adelie-$(translate_arch "$arch")/etc/apk/repositories"
-		echo "https://adelielinux.nic.cz/adelie/adelie/current/user" >> "${WORKDIR}/adelie-$(translate_arch "$arch")/etc/apk/repositories"
+		echo "https://adelielinux.nic.cz/adelie/current/system" >> "${WORKDIR}/adelie-$(translate_arch "$arch")/etc/apk/repositories"
+		echo "https://adelielinux.nic.cz/adelie/current/user" >> "${WORKDIR}/adelie-$(translate_arch "$arch")/etc/apk/repositories"
 		mount --bind /dev "${WORKDIR}/adelie-$(translate_arch "$arch")/dev"
 		mount --bind /proc "${WORKDIR}/adelie-$(translate_arch "$arch")/proc"
 		mount --bind /sys "${WORKDIR}/adelie-$(translate_arch "$arch")/sys"
@@ -43,11 +42,11 @@ write_plugin() {
 	DISTRO_NAME="Adélie Linux"
 	DISTRO_COMMENT="Version '${dist_version}'."
 
-	TARBALL_URL['aarch64']="${GIT_RELEASE_URL}/adelie-aarch64-pd-${CURRENT_VERSION}.tar.xz"
+	TARBALL_URL['aarch64']="${ROOTFS_FILESERVER_URL}/adelie-aarch64-pd-${CURRENT_VERSION}.tar.xz"
 	TARBALL_SHA256['aarch64']="$(sha256sum "${ROOTFS_DIR}/adelie-aarch64-pd-${CURRENT_VERSION}.tar.xz" | awk '{ print $1}')"
-	TARBALL_URL['arm']="${GIT_RELEASE_URL}/adelie-armv7-pd-${CURRENT_VERSION}.tar.xz"
+	TARBALL_URL['arm']="${ROOTFS_FILESERVER_URL}/adelie-arm-pd-${CURRENT_VERSION}.tar.xz"
 	TARBALL_SHA256['arm']="$(sha256sum "${ROOTFS_DIR}/adelie-arm-pd-${CURRENT_VERSION}.tar.xz" | awk '{ print $1}')"
-	TARBALL_URL['x86_64']="${GIT_RELEASE_URL}/adelie-x86_64-pd-${CURRENT_VERSION}.tar.xz"
+	TARBALL_URL['x86_64']="${ROOTFS_FILESERVER_URL}/adelie-x86_64-pd-${CURRENT_VERSION}.tar.xz"
 	TARBALL_SHA256['x86_64']="$(sha256sum "${ROOTFS_DIR}/adelie-x86_64-pd-${CURRENT_VERSION}.tar.xz" | awk '{ print $1}')"
 	EOF
 }

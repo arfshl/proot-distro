@@ -1,5 +1,5 @@
 dist_name="Manjaro"
-dist_version="20250922"
+dist_version="20260216"
 
 bootstrap_distribution() {
 	sudo rm -f "${ROOTFS_DIR}"/manjaro-*.tar.xz
@@ -43,7 +43,7 @@ write_plugin() {
 	DISTRO_NAME="Manjaro"
 	DISTRO_COMMENT="Manjaro ARM64 port."
 
-	TARBALL_URL['aarch64']="${GIT_RELEASE_URL}/manjaro-aarch64-pd-${CURRENT_VERSION}.tar.xz"
+	TARBALL_URL['aarch64']="${ROOTFS_FILESERVER_URL}/manjaro-aarch64-pd-${CURRENT_VERSION}.tar.xz"
 	TARBALL_SHA256['aarch64']="$(sha256sum "${ROOTFS_DIR}/manjaro-aarch64-pd-${CURRENT_VERSION}.tar.xz" | awk '{ print $1}')"
 
 	distro_setup() {

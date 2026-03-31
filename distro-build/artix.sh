@@ -1,5 +1,5 @@
 dist_name="Artix Linux"
-dist_version="20250831"
+dist_version="20260124"
 
 bootstrap_distribution() {
 	sudo rm -f "${ROOTFS_DIR}"/artix-*.tar.xz
@@ -24,6 +24,7 @@ bootstrap_distribution() {
 	echo 'Server = https://armtix.artixlinux.org/repos/\$repo/os/\$arch' > "${WORKDIR}/artix-aarch64"/etc/pacman.d/mirrorlist
 	echo 'Server = https://repo.xdan.eu/pacman/armtix/\$repo/os/\$arch' >> "${WORKDIR}/artix-aarch64"/etc/pacman.d/mirrorlist
 	echo 'Server = https://repo.armtixlinux.org/\$repo/os/\$arch' >> "${WORKDIR}/artix-aarch64"/etc/pacman.d/mirrorlist
+	sed -i 's/^#DisableSandbox/DisableSandbox/' "${WORKDIR}/artix-aarch64"/etc/pacman.conf
 	chroot "${WORKDIR}/artix-aarch64" pacman -Rnsc --noconfirm linux-aarch64 linux-aarch64-lts linux-aarch64-headers linux-aarch64-lts-headers linux-firmware
 	chroot "${WORKDIR}/artix-aarch64" pacman -Syu --noconfirm
 	EOF
@@ -41,7 +42,7 @@ write_plugin() {
 	# If you want customize installation, please make a copy.
 	DISTRO_NAME="Artix Linux"
 
-	TARBALL_URL['aarch64']="${GIT_RELEASE_URL}/artix-aarch64-pd-${CURRENT_VERSION}.tar.xz"
+	TARBALL_URL['aarch64']="${ROOTFS_FILESERVER_URL}/artix-aarch64-pd-${CURRENT_VERSION}.tar.xz"
 	TARBALL_SHA256['aarch64']="$(sha256sum "${ROOTFS_DIR}/artix-aarch64-pd-${CURRENT_VERSION}.tar.xz" | awk '{ print $1}')"
 
 	distro_setup() {
